@@ -59,7 +59,7 @@ def dashboard():
         phishing_keywords = [
             "bank", "account", "verify", "login",
             "password", "urgent", "suspended",
-            "update", "click", "confirm"
+            "update", "click", "confirm" , "pin" ,"UPI pin" , "Aadhar pin" , "Aadhar" ,"ATM pin"
         ]
 
         keyword_count = sum(word in message for word in phishing_keywords)

@@ -199,6 +199,7 @@ button:hover {
     line-height: 1.6;
 }
 
+
 /* ===== LANDING PAGE ===== */
 .landing-container {
     height: 100vh;
@@ -307,4 +308,76 @@ button:hover {
     padding: 15px 50px;
     font-size: 18px;
     animation: fadePop 1.8s ease-out;
+}
+/* ========================= */
+/* 📱 MOBILE RESPONSIVE FIX  */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+    .main-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 110px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    /* Info cards stack */
+    .info-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .info-card {
+        width: 100%;
+    }
+
+    /* Result cards stack */
+    .results-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    /* Gauge full width */
+    .gauge {
+        width: 100%;
+    }
+
+    /* Recommendation full width */
+    .recommendation,
+    .threat-box {
+        width: 100%;
+    }
+
+    /* Stats section stack */
+    .stats-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .stat-box {
+        width: 100%;
+    }
+
+    /* Reduce header size */
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .header h2 {
+        font-size: 14px;
+    }
+
 }
