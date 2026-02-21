@@ -381,3 +381,107 @@ button:hover {
     }
 
 }
+/* ============================= */
+/* 🔥 MOBILE RESPONSIVE FIX */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+    .main-container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    /* HEADER */
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .header h2 {
+        font-size: 14px;
+    }
+
+    /* TEXTAREA */
+    textarea {
+        width: 100%;
+        height: 140px;
+        font-size: 16px;
+    }
+
+    /* BUTTON */
+    button {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    /* INFO SECTION STACK */
+    .info-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .info-card {
+        width: 100%;
+        padding: 20px;
+        font-size: 15px;
+    }
+
+    /* RESULTS STACK */
+    .results-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .card {
+        width: 100%;
+        padding: 25px;
+        font-size: 18px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+    }
+
+    .card p {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    /* GAUGE */
+    .gauge {
+        width: 100%;
+        height: 30px;
+    }
+
+    .score {
+        font-size: 20px;
+    }
+
+    /* RECOMMENDATION */
+    .recommendation,
+    .threat-box {
+        width: 100%;
+        padding: 20px;
+        font-size: 15px;
+    }
+
+    /* STATS SECTION STACK */
+    .stats-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .stat-box {
+        width: 100%;
+        padding: 25px;
+    }
+
+    .stat-number {
+        font-size: 28px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+    }
+}

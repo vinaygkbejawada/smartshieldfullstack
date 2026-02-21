@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartShield</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <!-- Font Awesome Icons -->
@@ -13,21 +16,23 @@
 <div class="main-container">
 
     <!-- HEADER -->
-    <div class="header">
+    <header class="header">
         <h1>🛡 SMARTSHIELD</h1>
         <h2>AI PHISHING & SPAM DETECTION SYSTEM</h2>
-    </div>
+    </header>
 
     <!-- FORM SECTION -->
-    <form method="POST" class="input-section">
-        <textarea name="message"
-                  placeholder="Enter email, message or URL to analyze..."
-                  required>{{ message }}</textarea>
-        <button type="submit">ANALYZE THREAT</button>
-    </form>
+    <section class="form-section">
+        <form method="POST" class="input-section">
+            <textarea name="message"
+                      placeholder="Enter email, message or URL to analyze..."
+                      required>{{ message }}</textarea>
+            <button type="submit">ANALYZE THREAT</button>
+        </form>
+    </section>
 
     <!-- INFO SECTION -->
-    <div class="info-section">
+    <section class="info-section">
         <div class="info-card">
             <h3>🔍 Why SmartShield?</h3>
             <p>
@@ -56,10 +61,10 @@
                 AI-powered security report.
             </p>
         </div>
-    </div>
+    </section>
 
     <!-- RESULTS -->
-    <div class="results-section">
+    <section class="results-section">
         <div class="card">
             <h3>Spam Probability</h3>
             <p>{{ result.spam_prob }}%</p>
@@ -79,10 +84,10 @@
             <h3>URL Risk Score</h3>
             <p>{{ result.url_risk }}</p>
         </div>
-    </div>
+    </section>
 
     <!-- THREAT SCORE -->
-    <div class="gauge-box">
+    <section class="gauge-box">
         <h2>Final Threat Score</h2>
         <div class="gauge">
             <div class="gauge-fill"
@@ -90,22 +95,22 @@
         </div>
         <p class="score">{{ result.final_score }}/100</p>
         <h3 class="risk-level">{{ result.risk_level }}</h3>
-    </div>
+    </section>
 
     <!-- RECOMMENDATION -->
-    <div class="recommendation {{ result.risk_level|lower }}">
+    <section class="recommendation {{ result.risk_level|lower }}">
         <h4>Security Recommendation</h4>
         <p>{{ result.recommendation }}</p>
-    </div>
+    </section>
 
     <!-- THREAT INTELLIGENCE -->
-    <div class="threat-box">
+    <section class="threat-box">
         <h4>🔎 Threat Intelligence</h4>
         <p>{{ result.threat_info }}</p>
-    </div>
+    </section>
 
     <!-- REAL-TIME PLATFORM ANALYTICS -->
-    <div class="stats-section">
+    <section class="stats-section">
 
         <div class="stat-box">
             <div class="stat-icon">
@@ -131,7 +136,7 @@
             <div class="stat-label">High Risk Alerts Generated</div>
         </div>
 
-    </div>
+    </section>
 
 </div>
 
@@ -140,40 +145,41 @@
 const counters = document.querySelectorAll('.stat-number');
 let started = false;
 
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting && !started) {
-            started = true;
+const statsSection = document.querySelector('.stats-section');
 
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                let current = 0;
+if (statsSection) {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !started) {
+                started = true;
 
-                // 🔥 Faster animation (0.8 seconds)
-                const duration = 500;
-                const stepTime = 16;   // smooth 60fps
-                const totalSteps = duration / stepTime;
-                const increment = target / totalSteps;
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    let current = 0;
 
-                const updateCount = () => {
-                    current += increment;
-                    if (current < target) {
-                        counter.innerText = Math.ceil(current);
-                        requestAnimationFrame(updateCount);
-                    } else {
-                        counter.innerText = target;
-                    }
-                };
+                    const duration = 500;
+                    const stepTime = 16;
+                    const totalSteps = duration / stepTime;
+                    const increment = target / totalSteps;
 
-                updateCount();
-            });
-        }
-    });
-}, {
-    threshold: 0.5
-});
+                    const updateCount = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.innerText = Math.ceil(current);
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
 
-observer.observe(document.querySelector('.stats-section'));
+                    updateCount();
+                });
+            }
+        });
+    }, { threshold: 0.4 });
+
+    observer.observe(statsSection);
+}
 </script>
 
 </body>
