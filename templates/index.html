@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartShield</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="main-container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🛡 SMARTSHIELD</h1>
+        <h2>AI PHISHING & SPAM DETECTION SYSTEM</h2>
+    </div>
+
+    <!-- FORM SECTION -->
+    <form method="POST" class="input-section">
+        <textarea name="message"
+                  placeholder="Enter email, message or URL to analyze..."
+                  required>{{ message }}</textarea>
+        <button type="submit">ANALYZE THREAT</button>
+    </form>
+
+    <!-- INFO SECTION -->
+    <div class="info-section">
+        <div class="info-card">
+            <h3>🔍 Why SmartShield?</h3>
+            <p>
+                SmartShield uses AI, NLP, and Machine Learning techniques
+                to detect phishing attempts, spam messages, and malicious URLs.
+                It provides real-time threat scoring and actionable recommendations.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3>⚙ How It Works</h3>
+            <ul>
+                <li>✔ ML-based Spam Classification</li>
+                <li>✔ Phishing Keyword Detection</li>
+                <li>✔ URL Suspicion Analysis</li>
+                <li>✔ Threat Score Calculation (0–100)</li>
+                <li>✔ Crowd-Based Threat Intelligence</li>
+            </ul>
+        </div>
+
+        <div class="info-card">
+            <h3>📌 How To Use</h3>
+            <p>
+                Paste any email, SMS, or website link above and click
+                <strong>Analyze Threat</strong> to receive a detailed
+                AI-powered security report.
+            </p>
+        </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-section">
+        <div class="card">
+            <h3>Spam Probability</h3>
+            <p>{{ result.spam_prob }}%</p>
+        </div>
+
+        <div class="card">
+            <h3>Phishing Risk</h3>
+            <p>{{ result.phishing_risk }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Suspicious Keywords</h3>
+            <p>{{ result.keyword_count }}</p>
+        </div>
+
+        <div class="card">
+            <h3>URL Risk Score</h3>
+            <p>{{ result.url_risk }}</p>
+        </div>
+    </div>
+
+    <!-- THREAT SCORE -->
+    <div class="gauge-box">
+        <h2>Final Threat Score</h2>
+        <div class="gauge">
+            <div class="gauge-fill"
+                 style="width: {{ result.final_score }}%;"></div>
+        </div>
+        <p class="score">{{ result.final_score }}/100</p>
+        <h3 class="risk-level">{{ result.risk_level }}</h3>
+    </div>
+
+    <!-- RECOMMENDATION -->
+    <div class="recommendation {{ result.risk_level|lower }}">
+        <h4>Security Recommendation</h4>
+        <p>{{ result.recommendation }}</p>
+    </div>
+
+    <!-- THREAT INTELLIGENCE -->
+    <div class="threat-box">
+        <h4>🔎 Threat Intelligence</h4>
+        <p>{{ result.threat_info }}</p>
+    </div>
+
+    <!-- REAL-TIME PLATFORM ANALYTICS -->
+    <div class="stats-section">
+
+        <div class="stat-box">
+            <div class="stat-icon">
+                <i class="fas fa-database"></i>
+            </div>
+            <div class="stat-number" data-target="{{ total_messages }}">0</div>
+            <div class="stat-label">Total Messages Analyzed</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-number" data-target="{{ repeated_threats }}">0</div>
+            <div class="stat-label">Repeated Threats Detected</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="stat-number" data-target="{{ high_risk_alerts }}">0</div>
+            <div class="stat-label">High Risk Alerts Generated</div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔥 SCROLL-TRIGGERED COUNTER SCRIPT -->
+<script>
+const counters = document.querySelectorAll('.stat-number');
+let started = false;
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !started) {
+            started = true;
+
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                let current = 0;
+
+                // 🔥 Faster animation (0.8 seconds)
+                const duration = 500;
+                const stepTime = 16;   // smooth 60fps
+                const totalSteps = duration / stepTime;
+                const increment = target / totalSteps;
+
+                const updateCount = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current);
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+
+                updateCount();
+            });
+        }
+    });
+}, {
+    threshold: 0.5
+});
+
+observer.observe(document.querySelector('.stats-section'));
+</script>
+
+</body>
+</html>
