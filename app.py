@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import pickle
 import sqlite3
+import re
+import os
 
 app = Flask(__name__)
 
@@ -55,28 +57,50 @@ def dashboard():
         probability = model.predict_proba([message])[0][1]
         final_score = int(probability * 100)
 
-        # 🔥 2️⃣ Phishing Keyword Boost
-        phishing_keywords = [
-            "bank", "account", "verify", "login",
-            "password", "urgent", "suspended",
-            "update", "click", "confirm" , "pin" ,"UPI pin" , "Aadhar pin" , "Aadhar" ,"ATM pin"
+        # 🔥 2️⃣ Advanced Fraud Keyword Detection (Hybrid AI)
+        high_risk_keywords = [
+            "upi", "pin", "atm", "aadhaar", "aadhar",
+            "bank details", "processing fee", "lottery",
+            "won", "winner", "claim", "payment",
+            "click here", "verify now", "urgent",
+            "suspended", "account blocked",
+            "enter your pin", "share otp", "otp",
+            "free gift", "reward"
         ]
 
-        keyword_count = sum(word in message for word in phishing_keywords)
-        final_score += keyword_count * 5
+        keyword_count = 0
+        for word in high_risk_keywords:
+            if word in message:
+                keyword_count += 1
 
-        # 🔥 3️⃣ URL Detection Boost
-        if "http" in message or "www" in message:
+        # Strong boost logic
+        if keyword_count >= 3:
+            final_score += 30
+        elif keyword_count == 2:
+            final_score += 20
+        elif keyword_count == 1:
             final_score += 10
+
+        # 🔥 3️⃣ Currency & Large Amount Detection
+        if "₹" in message or "rs" in message:
+            final_score += 15
+
+        # Detect large money amounts like 5000, 25,00,000 etc.
+        if re.search(r"\d{2,},?\d{2,}", message):
+            final_score += 10
+
+        # 🔥 4️⃣ URL Detection Boost
+        if "http" in message or "www" in message:
+            final_score += 15
             url_risk = "HIGH"
         else:
             url_risk = "LOW"
 
-        # Cap score
+        # Cap score at 100
         if final_score > 100:
             final_score = 100
 
-        # 🔥 4️⃣ Risk Classification
+        # 🔥 5️⃣ Risk Classification
         if final_score < 30:
             risk_level = "SAFE"
             recommendation = "✅ This message appears safe to open."
@@ -90,7 +114,7 @@ def dashboard():
             risk_level = "CRITICAL"
             recommendation = "🚨 Dangerous message detected! Block sender immediately."
 
-        # 🔥 5️⃣ SQLite Threat Intelligence
+        # 🔥 6️⃣ SQLite Threat Intelligence
         conn = sqlite3.connect("threat_data.db")
         cursor = conn.cursor()
 
@@ -133,21 +157,18 @@ def dashboard():
             "threat_info": threat_info
         }
 
-    # 🔥 REAL-TIME PLATFORM ANALYTICS (ALWAYS RUN)
+    # 🔥 REAL-TIME PLATFORM ANALYTICS
     conn = sqlite3.connect("threat_data.db")
     cursor = conn.cursor()
 
-    # Total unique messages analyzed
     cursor.execute("SELECT SUM(count) FROM messages")
     total_messages = cursor.fetchone()[0]
     if total_messages is None:
         total_messages = 0
 
-    # Repeated threats (messages that appeared more than once)
     cursor.execute("SELECT COUNT(*) FROM messages WHERE count > 1")
     repeated_threats = cursor.fetchone()[0]
 
-    # High risk alerts (we approximate using repeated threats + high classification)
     cursor.execute("SELECT COUNT(*) FROM messages")
     high_risk_alerts = cursor.fetchone()[0]
 
@@ -162,8 +183,6 @@ def dashboard():
         high_risk_alerts=high_risk_alerts
     )
 
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
